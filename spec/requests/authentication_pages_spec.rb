@@ -69,14 +69,26 @@ describe "Authentication" do
       let(:user) { FactoryGirl.create(:user) }
 
       describe "when attempting to visit a protected page" do
-        before do
-          visit edit_user_path(user)
-          valid_signin(user)
-        end
+        before { visit edit_user_path(user) }
 
         describe "after signing in" do
+          before { sign_in(user) }
+
           it "should render the desired protected page" do
             page.should have_title('Edit user')
+          end
+
+          describe "and logging out" do
+            before { delete signout_path }
+
+            describe "and logging in again" do
+              before { sign_in(user) }
+
+              it "should be the profile(default) page" do
+                page.should have_title(user.name)
+                page.should have_h1(user.name)
+              end
+            end
           end
         end
       end
@@ -120,7 +132,7 @@ describe "Authentication" do
       let(:user) { FactoryGirl.create(:user) }
       let(:non_admin) { FactoryGirl.create(:user) }
 
-      before { sign_in non_admin}
+      before { sign_in non_admin }
 
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }

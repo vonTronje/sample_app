@@ -7,7 +7,7 @@ describe "StaticPages" do
   shared_examples_for "all static pages" do
     it { should have_selector('h1', text: heading) }
     it { should have_selector('title', text: full_title(page_title)) }
-    it { should have_link('Sign in', href: signin_path)}
+    it { should have_link('Sign in', href: signin_path) }
   end
 
   describe "Home page" do
