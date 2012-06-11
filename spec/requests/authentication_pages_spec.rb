@@ -19,6 +19,8 @@ describe "Authentication" do
 
   	  it { should have_title('Sign in') }
   	  it { should have_error_message('Invalid') }
+      it { should_not have_link('Profile') }
+      it { should_not have_link('Settings') }
 
   	  describe "after visiting another page" do
   	  	before { click_link "Home" }
@@ -47,6 +49,21 @@ describe "Authentication" do
   end
 
   describe "authorization" do
+
+    describe "for signed_in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user }
+
+      describe "they should not access 'new' action" do
+        before { get signup_path }
+        specify { response.should redirect_to(root_path) }
+      end
+
+      describe "they should not access 'create' action" do
+        before { post signup_path }
+        specify {response.should redirect_to(root_path)}
+      end
+    end
 
     describe "for non-signed_in users" do
       let(:user) { FactoryGirl.create(:user) }
