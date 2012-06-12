@@ -139,6 +139,17 @@ describe "Authentication" do
         before {put user_path(wrong_user) }
         specify { response.should redirect_to(root_path) }
       end
+
+      describe "in the Microposts controller" do
+
+        describe "submitting to the destroy action" do
+          let!(:micropost) { FactoryGirl.create(:micropost, user: wrong_user) }
+
+          it "should not delete a micropost" do
+            expect { delete micropost_path(micropost) }.not_to change(Micropost, :count)
+          end
+        end
+      end
     end
 
     describe "as non-admin user" do
